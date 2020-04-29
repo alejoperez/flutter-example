@@ -9,7 +9,7 @@ class AppButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Container(
         width: double.infinity,
-        margin: EdgeInsets.all(5),
+        margin: const EdgeInsets.all(5),
         child: RaisedButton(
           color: Colors.green,
           child: Text(text, style: TextStyle(color: Colors.white)),

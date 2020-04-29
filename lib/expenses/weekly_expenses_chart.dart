@@ -6,7 +6,7 @@ import 'package:intl/intl.dart';
 class WeeklyExpensesChart extends StatelessWidget {
   final List<Transaction> _recentWeeklyTransactions;
 
-  WeeklyExpensesChart(this._recentWeeklyTransactions);
+  const WeeklyExpensesChart(this._recentWeeklyTransactions);
 
   List<Map<String, Object>> get _weeklyExpensesSummary =>
       List.generate(7, (index) {
@@ -35,9 +35,9 @@ class WeeklyExpensesChart extends StatelessWidget {
     print(_weeklyExpensesSummary);
     return Card(
         elevation: 6,
-        margin: EdgeInsets.all(15),
+        margin: const EdgeInsets.all(15),
         child: Padding(
-          padding: EdgeInsets.all(10),
+          padding: const EdgeInsets.all(10),
           child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: _weeklyExpensesSummary

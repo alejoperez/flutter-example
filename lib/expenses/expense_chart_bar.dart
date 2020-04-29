@@ -6,7 +6,7 @@ class ExpenseChartBar extends StatelessWidget {
   final double totalDayExpenses;
   final double percentageOfTotalWeekExpenses;
 
-  ExpenseChartBar(
+  const ExpenseChartBar(
       {@required this.weekDayLabel,
       @required this.totalDayExpenses,
       @required this.percentageOfTotalWeekExpenses});
@@ -39,7 +39,7 @@ class ExpenseChartBar extends StatelessWidget {
                     FractionallySizedBox(
                       heightFactor: percentageOfTotalWeekExpenses,
                       child: Container(
-                          margin: EdgeInsets.all(1),
+                          margin: const EdgeInsets.all(1),
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(10),
                               color: Theme.of(context).primaryColorLight.withOpacity(1))),
