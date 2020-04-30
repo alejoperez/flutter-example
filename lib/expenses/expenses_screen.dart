@@ -14,13 +14,31 @@ class ExpensesScreen extends StatefulWidget {
   _ExpensesScreenState createState() => _ExpensesScreenState();
 }
 
-class _ExpensesScreenState extends State<ExpensesScreen> {
+class _ExpensesScreenState extends State<ExpensesScreen> with WidgetsBindingObserver{
   bool _showChart = false;
   final List<Transaction> _transactionList = [];
 
   List<Transaction> get _recentWeeklyTransactions => _transactionList
       .where((t) => t.date.isAfter(DateTime.now().subtract(Duration(days: 7))))
       .toList();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    print(state);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    WidgetsBinding.instance.removeObserver(this);
+  }
 
   void _showAddTransactionBottomSheet(BuildContext ctx) {
     showModalBottomSheet(
@@ -51,21 +69,8 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
   @override
   Widget build(BuildContext context) {
     final PreferredSizeWidget appBar = _isiOS()
-        ? CupertinoNavigationBar(
-            backgroundColor: Theme.of(context).primaryColor,
-            middle: const Text("Expenses Manager", style: TextStyle(color: Colors.white)),
-            trailing: Row(mainAxisSize: MainAxisSize.min, children: [
-              GestureDetector(
-                child: const Icon(CupertinoIcons.add, color: Colors.white),
-                onTap: () => _showAddTransactionBottomSheet(context),
-              )
-            ]),
-          )
-        : AppBar(title: const Text("Expenses Manager"), actions: [
-            IconButton(
-                icon: const Icon(Icons.add, color: Colors.white),
-                onPressed: () => _showAddTransactionBottomSheet(context))
-          ]);
+        ? _buildCupertinoNavigationBar(context)
+        : _buildMaterialAppBar(context);
 
     final double bodyHeight = MediaQuery.of(context).size.height -
         MediaQuery.of(context).padding.top -
@@ -145,5 +150,26 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
             floatingActionButtonLocation:
                 FloatingActionButtonLocation.centerFloat,
           );
+  }
+
+  AppBar _buildMaterialAppBar(BuildContext context) {
+    return AppBar(title: const Text("Expenses Manager"), actions: [
+          IconButton(
+              icon: const Icon(Icons.add, color: Colors.white),
+              onPressed: () => _showAddTransactionBottomSheet(context))
+        ]);
+  }
+
+  CupertinoNavigationBar _buildCupertinoNavigationBar(BuildContext context) {
+    return CupertinoNavigationBar(
+          backgroundColor: Theme.of(context).primaryColor,
+          middle: const Text("Expenses Manager", style: TextStyle(color: Colors.white)),
+          trailing: Row(mainAxisSize: MainAxisSize.min, children: [
+            GestureDetector(
+              child: const Icon(CupertinoIcons.add, color: Colors.white),
+              onTap: () => _showAddTransactionBottomSheet(context),
+            )
+          ]),
+        );
   }
 }
