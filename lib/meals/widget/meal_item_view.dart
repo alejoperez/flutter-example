@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterexample/domain/meal.dart';
+import 'package:flutterexample/meals/screens/meal_detail_screen.dart';
 
 class MealItemView extends StatelessWidget {
   final Meal meal;
@@ -33,10 +34,15 @@ class MealItemView extends StatelessWidget {
     }
   }
 
+  void _onMealClicked(BuildContext ctx) {
+    Navigator.of(ctx)
+        .pushNamed(MealDetailScreen.ROUTE_NAME, arguments: meal);
+  }
+
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () => {},
+      onTap: () => _onMealClicked(context),
       child: Card(
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
