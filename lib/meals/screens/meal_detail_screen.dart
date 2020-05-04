@@ -4,6 +4,11 @@ import 'package:flutterexample/domain/meal.dart';
 
 class MealDetailScreen extends StatelessWidget {
   static const ROUTE_NAME = "/meal-detail";
+  final Function _toggleFavoriteFunction;
+  final Function _isMealFavoriteFunction;
+
+
+  MealDetailScreen(this._toggleFavoriteFunction,this._isMealFavoriteFunction);
 
   Container _buildSectionTitle(BuildContext context, String title) {
     return Container(
@@ -67,6 +72,12 @@ class MealDetailScreen extends StatelessWidget {
                 itemCount: meal.steps.length))
           ],
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(
+            _isMealFavoriteFunction(meal) ? Icons.star : Icons.star_border
+        ),
+        onPressed: () => _toggleFavoriteFunction(meal),
       ),
     );
   }

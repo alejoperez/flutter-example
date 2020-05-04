@@ -1,14 +1,26 @@
 import "package:flutter/material.dart";
-import 'app/app.dart';
+import 'package:flutterexample/app/expenses_app.dart';
+import 'package:flutterexample/app/shop_app.dart';
+import 'package:flutterexample/expenses/expenses_screen.dart';
+import 'app/meals_app.dart';
 import 'package:flutter/services.dart';
 
 void main() {
-  /*WidgetsFlutterBinding.ensureInitialized();
+  /* Block app orientation
+  WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations(
       [
         DeviceOrientation.portraitDown,
         DeviceOrientation.portraitUp
       ]
   );*/
-  runApp(App());
+
+// Expenses App
+//  runApp(ExpensesApp());
+
+//  Meals Application
+  runApp(MealsApp());
+
+// Shop Application
+//  runApp(ShopApp());
 }

@@ -36,7 +36,12 @@ class MealItemView extends StatelessWidget {
 
   void _onMealClicked(BuildContext ctx) {
     Navigator.of(ctx)
-        .pushNamed(MealDetailScreen.ROUTE_NAME, arguments: meal);
+        .pushNamed(MealDetailScreen.ROUTE_NAME, arguments: meal)
+        .then((mealId) {
+      if (mealId != null) {
+        //removeMealFunction(mealId);
+      }
+    });
   }
 
   @override
