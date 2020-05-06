@@ -19,8 +19,8 @@ void main() {
 //  runApp(ExpensesApp());
 
 //  Meals Application
-  runApp(MealsApp());
+//  runApp(MealsApp());
 
 // Shop Application
-//  runApp(ShopApp());
+  runApp(ShopApp());
 }
