@@ -49,7 +49,7 @@ class _OrderItemViewState extends State<OrderItemView> {
                           TextStyle(fontWeight: FontWeight.bold),
                     ),
                     Text(
-                      "${widget.order.shoppingCart[index]} x \$ ${widget.order.shoppingCart[index].price}",
+                      "${widget.order.shoppingCart[index].quantity} x \$ ${widget.order.shoppingCart[index].price}",
                       style: TextStyle(color: Colors.grey),
                     )
                   ],

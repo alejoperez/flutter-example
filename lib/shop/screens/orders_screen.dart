@@ -6,17 +6,30 @@ import 'package:flutterexample/providers/orders_provider.dart';
 
 class OrdersScreen extends StatelessWidget {
   static const ROUTE_NAME = "/orders";
+
   @override
   Widget build(BuildContext context) {
-    final provider = Provider.of<OrdersProvider>(context);
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Orders"),
-      ),
-      drawer: ShopDrawer(),
-      body: ListView.builder(
-          itemCount: provider.orders.length,
-          itemBuilder: (_, index) => OrderItemView(provider.orders[index])),
-    );
+        appBar: AppBar(
+          title: Text("Orders"),
+        ),
+        drawer: ShopDrawer(),
+        body: FutureBuilder(
+            future: Provider.of<OrdersProvider>(context, listen: false)
+                .fetchOrders(),
+            builder: (ctx, data) {
+              if (data.connectionState == ConnectionState.waiting) {
+                return Center(child: CircularProgressIndicator());
+              } else if (data.error != null) {
+                return Center(child: Text("An Error ocurred!"));
+              } else {
+                return Consumer<OrdersProvider>(
+                  builder: (ctx, ordersProvider, _) => ListView.builder(
+                      itemCount: ordersProvider.orders.length,
+                      itemBuilder: (_, index) =>
+                          OrderItemView(ordersProvider.orders[index])),
+                );
+              }
+            }));
   }
 }
