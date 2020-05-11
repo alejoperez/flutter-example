@@ -4,6 +4,7 @@ import 'package:flutterexample/shop/widgets/bagde_view.dart';
 import 'package:flutterexample/providers/shopping_cart_provider.dart';
 import 'package:flutterexample/shop/widgets/shop_drawer.dart';
 import 'package:provider/provider.dart';
+import 'package:flutterexample/providers/product_list_provider.dart';
 import 'package:flutterexample/shop/widgets/products_grid_view.dart';
 
 enum FilterOptions { Favorites, All }
@@ -15,6 +16,28 @@ class ProductsOverviewScreen extends StatefulWidget {
 
 class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
   var _showFavorite = false;
+  var _isInitProducts = false;
+  var _isLoading = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_isInitProducts) {
+      setState(() {
+        _isLoading = true;
+      });
+      Provider.of<ProductListProvider>(context).fetchProducts().then((_) {
+        setState(() {
+          _isLoading = false;
+        });
+      }).catchError((_) {
+        setState(() {
+          _isLoading = false;
+        });
+      });
+      _isInitProducts = true;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +77,7 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
         ],
       ),
       drawer: ShopDrawer(),
-      body: ProductsGridView(_showFavorite),
+      body: _isLoading ? Center(child: CircularProgressIndicator()) : ProductsGridView(_showFavorite),
     );
   }
 }

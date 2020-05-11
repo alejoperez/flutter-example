@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterexample/providers/product_provider.dart';
 import 'package:flutterexample/providers/shopping_cart_provider.dart';
@@ -8,7 +9,8 @@ class ProductItemView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = Provider.of<Product>(context, listen: false);
-    final shoppingCartProvider = Provider.of<ShoppingCartProvider>(context, listen: false);
+    final shoppingCartProvider =
+        Provider.of<ShoppingCartProvider>(context, listen: false);
     return ClipRRect(
       borderRadius: BorderRadius.circular(10),
       child: GridTile(
@@ -44,7 +46,16 @@ class ProductItemView extends StatelessWidget {
             color: Theme.of(context).accentColor,
             icon: Icon(Icons.shopping_cart),
             onPressed: () {
-              shoppingCartProvider.addItem(product.id, product.price, product.title);
+              shoppingCartProvider.addItem(
+                  product.id, product.price, product.title);
+              Scaffold.of(context).hideCurrentSnackBar();
+              Scaffold.of(context).showSnackBar(SnackBar(
+                content: Text("Added item to the cart!"),
+                duration: Duration(seconds: 2),
+                action: SnackBarAction(label: "UNDO", onPressed: () {
+                  shoppingCartProvider.removeSingleItem(product.id);
+                }),
+              ));
             },
           ),
         ),

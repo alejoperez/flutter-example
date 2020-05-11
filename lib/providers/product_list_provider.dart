@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutterexample/domain/http_exception.dart';
 import 'package:flutterexample/providers/product_provider.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class ProductListProvider with ChangeNotifier {
   List<Product> _products = [
@@ -45,10 +48,98 @@ class ProductListProvider with ChangeNotifier {
     return _products.where((product) => product.isFavorite).toList();
   }
 
-  void addProduct() {
-//    _items.add(value);
-    notifyListeners();
+  Future<void> fetchProducts() async {
+    try {
+      const url = "https://test-pn-4be48.firebaseio.com/products.json";
+      final response = await http.get(url);
+      final decodedData = json.decode(response.body) as Map<String, dynamic>;
+      final List<Product> products = [];
+
+      if (decodedData != null) {
+        decodedData.forEach((id, data) {
+          products.add(Product(
+            id: id,
+            title: data["title"],
+            description: data["description"],
+            price: data["price"],
+            imageUrl: data["imageUrl"],
+            isFavorite: data["isFavorite"],
+          ));
+        });
+      }
+
+      _products = products;
+      notifyListeners();
+    } catch (error) {
+      throw error;
+    }
   }
 
-  Product findById(String id) => _products.firstWhere((product) => product.id == id);
+  Future<void> addProduct(Product product) async {
+    try {
+      const url = "https://test-pn-4be48.firebaseio.com/products.json";
+      final response = await http.post(url,
+          body: json.encode({
+            "title": product.title,
+            "description": product.description,
+            "price": product.price,
+            "imageUrl": product.imageUrl,
+            "isFavorite": product.isFavorite
+          }));
+      final newProduct = Product(
+        id: json.decode(response.body)["name"],
+        title: product.title,
+        description: product.description,
+        imageUrl: product.imageUrl,
+        price: product.price,
+      );
+      _products.insert(0, newProduct);
+      notifyListeners();
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  Future<void> updateProduct(Product product) async {
+    try {
+      final index = _products.indexWhere((p) => p.id == product.id);
+      if (index >= 0) {
+        final url =
+            "https://test-pn-4be48.firebaseio.com/products/${product.id}.json";
+        await http.patch(url,
+            body: json.encode({
+              "title": product.title,
+              "description": product.description,
+              "price": product.price,
+              "imageUrl": product.imageUrl
+            }));
+
+        _products[index] = product;
+        notifyListeners();
+      }
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  Future<void> deleteProduct(String id) async {
+    final existingIndex = _products.indexWhere((p) => p.id == id);
+    var existingProduct = _products[existingIndex];
+    _products.removeAt(existingIndex);
+    notifyListeners();
+
+    final url = "https://test-pn-4be48.firebaseio.com/products/$id.json";
+    final response = await http.delete(url);
+
+    if (response.statusCode >= 400) {
+      _products.insert(existingIndex, existingProduct);
+      notifyListeners();
+      throw HttpException("Could not load products");
+    } else {
+      existingProduct = null;
+    }
+  }
+
+  Product findById(String id) =>
+      _products.firstWhere((product) => product.id == id);
 }
