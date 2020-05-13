@@ -10,6 +10,7 @@ import 'package:flutterexample/shop/widgets/products_grid_view.dart';
 enum FilterOptions { Favorites, All }
 
 class ProductsOverviewScreen extends StatefulWidget {
+  static const ROUTE_NAME = "/products-overview";
   @override
   _ProductsOverviewScreenState createState() => _ProductsOverviewScreenState();
 }

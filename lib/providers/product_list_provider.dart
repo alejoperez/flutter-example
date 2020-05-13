@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class ProductListProvider with ChangeNotifier {
-  List<Product> _products = [
+  List<Product> _products = [/*
     Product(
       id: 'p1',
       title: 'Red Shirt',
@@ -38,7 +38,13 @@ class ProductListProvider with ChangeNotifier {
       imageUrl:
           'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Cast-Iron-Pan.jpg/1024px-Cast-Iron-Pan.jpg',
     ),
+    */
   ];
+
+  final String _authToken;
+  final String _userId;
+
+  ProductListProvider(this._authToken,this._userId,this._products);
 
   List<Product> get products {
     return [..._products];
@@ -48,14 +54,20 @@ class ProductListProvider with ChangeNotifier {
     return _products.where((product) => product.isFavorite).toList();
   }
 
-  Future<void> fetchProducts() async {
+  Future<void> fetchProducts([bool filterByUser = false]) async {
     try {
-      const url = "https://test-pn-4be48.firebaseio.com/products.json";
+      final queryByUser = filterByUser ? "&orderBy=\"creatorId\"&equalTo=\"$_userId\"" : "";
+      final url = "https://test-pn-4be48.firebaseio.com/products.json?auth=$_authToken$queryByUser";
       final response = await http.get(url);
       final decodedData = json.decode(response.body) as Map<String, dynamic>;
       final List<Product> products = [];
 
       if (decodedData != null) {
+
+        final favoriteUrl = "https://test-pn-4be48.firebaseio.com/userFavorites/$_userId.json?auth=$_authToken";
+        final favoriteResponse = await http.get(favoriteUrl);
+        final decodedFavoriteData = json.decode(favoriteResponse.body) as Map<String, dynamic>;
+
         decodedData.forEach((id, data) {
           products.add(Product(
             id: id,
@@ -63,7 +75,7 @@ class ProductListProvider with ChangeNotifier {
             description: data["description"],
             price: data["price"],
             imageUrl: data["imageUrl"],
-            isFavorite: data["isFavorite"],
+            isFavorite: decodedFavoriteData == null ? false : decodedFavoriteData[id] ?? false,
           ));
         });
       }
@@ -77,14 +89,14 @@ class ProductListProvider with ChangeNotifier {
 
   Future<void> addProduct(Product product) async {
     try {
-      const url = "https://test-pn-4be48.firebaseio.com/products.json";
+      final url = "https://test-pn-4be48.firebaseio.com/products.json?auth=$_authToken";
       final response = await http.post(url,
           body: json.encode({
             "title": product.title,
             "description": product.description,
             "price": product.price,
             "imageUrl": product.imageUrl,
-            "isFavorite": product.isFavorite
+            "creatorId": _userId
           }));
       final newProduct = Product(
         id: json.decode(response.body)["name"],
@@ -105,7 +117,7 @@ class ProductListProvider with ChangeNotifier {
       final index = _products.indexWhere((p) => p.id == product.id);
       if (index >= 0) {
         final url =
-            "https://test-pn-4be48.firebaseio.com/products/${product.id}.json";
+            "https://test-pn-4be48.firebaseio.com/products/${product.id}.json?auth=$_authToken";
         await http.patch(url,
             body: json.encode({
               "title": product.title,
@@ -128,7 +140,7 @@ class ProductListProvider with ChangeNotifier {
     _products.removeAt(existingIndex);
     notifyListeners();
 
-    final url = "https://test-pn-4be48.firebaseio.com/products/$id.json";
+    final url = "https://test-pn-4be48.firebaseio.com/products/$id.json?auth=$_authToken";
     final response = await http.delete(url);
 
     if (response.statusCode >= 400) {

@@ -24,13 +24,13 @@ class Product with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> toggleFavorite() async {
+  Future<void> toggleFavorite(String authToken, String userId) async {
     final oldStatus = isFavorite;
     setFavoriteValue(!isFavorite);
 
     try {
-      final url = "https://test-pn-4be48.firebaseio.com/products/$id.json";
-      final response = await http.patch(url, body: json.encode({ "isFavorite": isFavorite }));
+      final url = "https://test-pn-4be48.firebaseio.com/userFavorites/$userId/$id.json?auth=$authToken";
+      final response = await http.put(url, body: json.encode(isFavorite));
       
       if(response.statusCode >= 400) {
         setFavoriteValue(oldStatus);
