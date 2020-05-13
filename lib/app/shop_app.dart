@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutterexample/providers/auth_provider.dart';
 import 'package:flutterexample/providers/orders_provider.dart';
 import 'package:flutterexample/providers/shopping_cart_provider.dart';
+import 'package:flutterexample/shop/helpers/custom_route.dart';
 import 'package:flutterexample/shop/screens/auth_screen.dart';
 import 'package:flutterexample/shop/screens/cart_screen.dart';
 import 'package:flutterexample/shop/screens/edit_new_product_screen.dart';
@@ -42,7 +43,16 @@ class ShopApp extends StatelessWidget {
                   ManageProductScreen.ROUTE_NAME: (_) => ManageProductScreen(),
                   EditProductScreen.ROUTE_NAME: (_) => EditProductScreen(),
                 },
-                theme: ThemeData(primarySwatch: Colors.teal, accentColor: Colors.amber)
+                theme: ThemeData(
+                    primarySwatch: Colors.teal,
+                    accentColor: Colors.amber,
+                    pageTransitionsTheme: PageTransitionsTheme(
+                      builders: {
+                        TargetPlatform.android:CustomPageTransitionBuilder(),
+                        TargetPlatform.iOS:CustomPageTransitionBuilder(),
+                      }
+                    )
+                ),
           )),
     );
   }

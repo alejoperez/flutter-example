@@ -18,46 +18,50 @@ class _OrderItemViewState extends State<OrderItemView> {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      margin: const EdgeInsets.all(10),
-      child: Column(
-        children: [
-          ListTile(
-            title: Text("\$ ${widget.order.amount}"),
-            subtitle: Text(
-                DateFormat("dd/MM/yyyy hh:mm").format(widget.order.dateTime)),
-            trailing: IconButton(
-              icon: Icon(_expanded ? Icons.expand_less : Icons.expand_more),
-              onPressed: () {
-                setState(() {
-                  _expanded = !_expanded;
-                });
-              },
-            ),
-          ),
-          if (_expanded)
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 4),
-              height: min(10 + (widget.order.shoppingCart.length * 20.0), 100),
-              child: ListView.builder(
-                itemBuilder: (_, index) => Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      widget.order.shoppingCart[index].title,
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    Text(
-                      "${widget.order.shoppingCart[index].quantity} x \$ ${widget.order.shoppingCart[index].price}",
-                      style: TextStyle(color: Colors.grey),
-                    )
-                  ],
-                ),
-                itemCount: widget.order.shoppingCart.length,
+    return AnimatedContainer(
+      duration: Duration(milliseconds: 300),
+      height: _expanded ? min(110 + (widget.order.shoppingCart.length * 20.0), 200) : 95,
+      child: Card(
+        margin: const EdgeInsets.all(10),
+        child: Column(
+          children: [
+            ListTile(
+              title: Text("\$ ${widget.order.amount}"),
+              subtitle: Text(
+                  DateFormat("dd/MM/yyyy hh:mm").format(widget.order.dateTime)),
+              trailing: IconButton(
+                icon: Icon(_expanded ? Icons.expand_less : Icons.expand_more),
+                onPressed: () {
+                  setState(() {
+                    _expanded = !_expanded;
+                  });
+                },
               ),
-            )
-        ],
+            ),
+              AnimatedContainer(
+                duration: Duration(milliseconds: 300),
+                padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 4),
+                height: _expanded ? min(10 + (widget.order.shoppingCart.length * 20.0), 100) : 0,
+                child: ListView.builder(
+                  itemBuilder: (_, index) => Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        widget.order.shoppingCart[index].title,
+                        style:
+                            TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      Text(
+                        "${widget.order.shoppingCart[index].quantity} x \$ ${widget.order.shoppingCart[index].price}",
+                        style: TextStyle(color: Colors.grey),
+                      )
+                    ],
+                  ),
+                  itemCount: widget.order.shoppingCart.length,
+                ),
+              )
+          ],
+        ),
       ),
     );
   }

@@ -10,15 +10,20 @@ class ProductItemView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = Provider.of<Product>(context, listen: false);
-    final shoppingCartProvider = Provider.of<ShoppingCartProvider>(context, listen: false);
+    final shoppingCartProvider =
+        Provider.of<ShoppingCartProvider>(context, listen: false);
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
     return ClipRRect(
       borderRadius: BorderRadius.circular(10),
       child: GridTile(
         child: GestureDetector(
-          child: Image.network(
-            product.imageUrl,
-            fit: BoxFit.cover,
+          child: Hero(
+            tag: product.id,
+            child: FadeInImage(
+              placeholder: AssetImage("assets/images/product_holder.png"),
+              image: NetworkImage(product.imageUrl),
+              fit: BoxFit.cover,
+            ),
           ),
           onTap: () {
             Navigator.of(context).pushNamed(ProductDetailScreen.ROUTE_NAME,
@@ -34,7 +39,8 @@ class ProductItemView extends StatelessWidget {
                         ? Icons.favorite
                         : Icons.favorite_border),
                     onPressed: () {
-                      product.toggleFavorite(authProvider.token, authProvider.userId);
+                      product.toggleFavorite(
+                          authProvider.token, authProvider.userId);
                     },
                   )),
           title: Text(
@@ -53,9 +59,11 @@ class ProductItemView extends StatelessWidget {
               Scaffold.of(context).showSnackBar(SnackBar(
                 content: Text("Added item to the cart!"),
                 duration: Duration(seconds: 2),
-                action: SnackBarAction(label: "UNDO", onPressed: () {
-                  shoppingCartProvider.removeSingleItem(product.id);
-                }),
+                action: SnackBarAction(
+                    label: "UNDO",
+                    onPressed: () {
+                      shoppingCartProvider.removeSingleItem(product.id);
+                    }),
               ));
             },
           ),
