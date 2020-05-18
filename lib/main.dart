@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 import 'package:flutterexample/app/expenses_app.dart';
+import 'package:flutterexample/app/places_app.dart';
 import 'package:flutterexample/app/shop_app.dart';
 import 'package:flutterexample/expenses/expenses_screen.dart';
 import 'app/meals_app.dart';
@@ -22,5 +23,8 @@ void main() {
 //  runApp(MealsApp());
 
 // Shop Application
-  runApp(ShopApp());
+//  runApp(ShopApp());
+
+  // Places Application
+  runApp(PlacesApp());
 }
