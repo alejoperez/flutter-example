@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import 'package:flutterexample/app/chat_app.dart';
 import 'package:flutterexample/app/expenses_app.dart';
 import 'package:flutterexample/app/places_app.dart';
 import 'package:flutterexample/app/shop_app.dart';
@@ -26,5 +27,8 @@ void main() {
 //  runApp(ShopApp());
 
   // Places Application
-  runApp(PlacesApp());
+//  runApp(PlacesApp());
+
+// Chat Application
+  runApp(ChatApp());
 }

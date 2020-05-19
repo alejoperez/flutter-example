@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 
 enum AuthMode { Signup, Login }
 
-class AuthScreen extends StatelessWidget {
+class ShopAuthScreen extends StatelessWidget {
   static const routeName = '/auth';
 
   @override

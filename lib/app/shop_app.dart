@@ -34,7 +34,7 @@ class ShopApp extends StatelessWidget {
           builder: (ctx, authProvider, _) => MaterialApp(
                 home: authProvider.isAuthenticated ? ProductsOverviewScreen() : FutureBuilder(
                   future: authProvider.tryAutoLogin(),
-                  builder: (ctx, authSnapshot) => authSnapshot.connectionState == ConnectionState.waiting ? SplashScreen() : AuthScreen(),
+                  builder: (ctx, authSnapshot) => authSnapshot.connectionState == ConnectionState.waiting ? SplashScreen() : ShopAuthScreen(),
                 ),
                 routes: {
                   ProductDetailScreen.ROUTE_NAME: (_) => ProductDetailScreen(),
