@@ -53,6 +53,9 @@ class _ChatAuthFormState extends State<ChatAuthForm> {
                   if(!_isLogin)
                   UserImagePickerView(_setUserImage),
                   TextFormField(
+                    autocorrect: false,
+                    textCapitalization: TextCapitalization.none,
+                    enableSuggestions: false,
                     key: ValueKey("email"),
                     validator: (value) {
                       if (value.isEmpty || !value.contains('@')) {
@@ -68,6 +71,9 @@ class _ChatAuthFormState extends State<ChatAuthForm> {
                   ),
                   if(!_isLogin)
                   TextFormField(
+                    autocorrect: true,
+                    textCapitalization: TextCapitalization.words,
+                    enableSuggestions: false,
                     key: ValueKey("username"),
                     validator: (value) {
                       if (value.isEmpty) {

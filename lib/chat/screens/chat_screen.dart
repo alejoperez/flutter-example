@@ -2,8 +2,35 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutterexample/chat/widgets/chat_messages_view.dart';
 import 'package:flutterexample/chat/widgets/new_chat_message_view.dart';
-class ChatScreen extends StatelessWidget {
+import 'package:firebase_messaging/firebase_messaging.dart';
+
+class ChatScreen extends StatefulWidget {
   static const ROUTE_NAME = "/chat";
+
+  @override
+  _ChatScreenState createState() => _ChatScreenState();
+}
+
+class _ChatScreenState extends State<ChatScreen> {
+
+  @override
+  void initState() {
+    super.initState();
+    final fm = FirebaseMessaging();
+    fm.requestNotificationPermissions();
+    fm.configure(
+      onMessage: (messsage){
+
+      },
+      onLaunch: (message) {
+
+      },
+      onResume: (message) {
+
+      }
+    );
+    fm.subscribeToTopic("chat");
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -12,6 +39,7 @@ class ChatScreen extends StatelessWidget {
         title: Text("Chat"),
         actions: [
           DropdownButton(
+            underline: Container(),
             icon: Icon(Icons.more_vert, color: Theme.of(context).primaryIconTheme.color,),
             onChanged: (id) {
               if(id == "logout") {

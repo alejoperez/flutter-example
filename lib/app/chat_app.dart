@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutterexample/chat/screens/chat_screen.dart';
 import 'package:flutterexample/chat/screens/chat_auth_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutterexample/shop/screens/splash_screen.dart';
 
 class ChatApp extends StatelessWidget {
   @override
@@ -24,6 +25,11 @@ class ChatApp extends StatelessWidget {
       home: StreamBuilder(
         stream: FirebaseAuth.instance.onAuthStateChanged,
         builder: (ctx, dataSnapshot) {
+
+          if(dataSnapshot.connectionState == ConnectionState.waiting) {
+            return SplashScreen();
+          }
+
           if(dataSnapshot.hasData) {
             return ChatScreen();
           }
