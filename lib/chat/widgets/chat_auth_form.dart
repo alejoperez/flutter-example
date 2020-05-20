@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutterexample/chat/widgets/user_image_picker_view.dart';
+import 'dart:io';
 class ChatAuthForm extends StatefulWidget {
   final bool isLoading;
-  final void Function(String email, String password, String userName, bool isLogin, BuildContext ctx) submitAuthFormFunction;
+  final void Function(File userImageFile,String email, String password, String userName, bool isLogin, BuildContext ctx) submitAuthFormFunction;
   ChatAuthForm(this.submitAuthFormFunction,this.isLoading);
 
   @override
@@ -14,12 +16,24 @@ class _ChatAuthFormState extends State<ChatAuthForm> {
   String _userEmail = "";
   String _userName = "";
   String _userPassword = "";
+  File _userImageFile;
+
+  void _setUserImage(File image) {
+    _userImageFile = image;
+  }
+
   void _trySubmit() {
     final isFormValid = _formKey.currentState.validate();
     FocusScope.of(context).unfocus();
+
+    if(_userImageFile == null && !_isLogin) {
+      Scaffold.of(context).showSnackBar(SnackBar(content: Text("Image not selected"), backgroundColor: Colors.red,));
+      return;
+    }
+
     if(isFormValid) {
       _formKey.currentState.save();
-      widget.submitAuthFormFunction(_userEmail.trim(),_userPassword.trim(), _userName.trim(), _isLogin,context);
+      widget.submitAuthFormFunction(_userImageFile,_userEmail.trim(),_userPassword.trim(), _userName.trim(), _isLogin,context);
     }
   }
 
@@ -36,6 +50,8 @@ class _ChatAuthFormState extends State<ChatAuthForm> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
+                  if(!_isLogin)
+                  UserImagePickerView(_setUserImage),
                   TextFormField(
                     key: ValueKey("email"),
                     validator: (value) {

@@ -30,6 +30,7 @@ class ChatMessagesView extends StatelessWidget {
                     padding: const EdgeInsets.all(8),
                     child: MessageBubbleView(
                         userName: documents[index]["username"],
+                        imageUrl: documents[index]["userImage"],
                         message: documents[index]["text"],
                         isMe: documents[index]["userId"] == userData.data.uid,
                         key: ValueKey(documents[index].documentID),

@@ -21,7 +21,8 @@ class _NewChatMessageViewState extends State<NewChatMessageView> {
       "text": _enteredMessage,
       "createdAt" : Timestamp.now(),
       "userId":currentUser.uid,
-      "username": userData["username"]
+      "username": userData["username"],
+      "userImage": userData["image_url"],
     });
     _controller.clear();
     setState(() {
